@@ -4,8 +4,11 @@
 from snipsTools import SnipsConfigParser
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
+from lib import PostCodeClient
+
 import io
 import datapoint
+import json
 
 CONFIG_INI = "config.ini"
 
@@ -30,11 +33,12 @@ class Weather(object):
             self.config = None
         
         api_key = self.config.get("secret").get("datapoint_api_key")
-        lat = self.config.get("secret").get("lat")
-        lng = self.config.get("secret").get("lng")
+        postcode = self.config.get("secret").get("postcode")
+        
+        lat_lng = self.get_latlng(postcode)
 
         self.conn = datapoint.connection(api_key=api_key)
-        self.site = self.conn.get_nearest_site(lng, lat)
+        self.site = self.conn.get_nearest_site(lat_lng[1], lat_lng[0])
 
         # start listening to MQTT
         self.start_blocking()
@@ -64,7 +68,13 @@ class Weather(object):
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self,hermes, intent_message):
         self.weather_like_callback(hermes, intent_message)
-
+    
+    def get_latlng(postcode):
+        client = PostCodeClient()
+        pc = client.getLookupPostCode(postcode)
+        result = json.loads(pc)['result']
+        return [result['latitude'], result['longitude']]
+        
     # --> Register callback function and start MQTT
     def start_blocking(self):
         with Hermes(MQTT_ADDR) as h:
