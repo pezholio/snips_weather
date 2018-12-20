@@ -34,19 +34,21 @@ class Weather(object):
         lng = self.config.get("secret").get("lng")
 
         self.conn = datapoint.connection(api_key=api_key)
-        self.site = conn.get_nearest_site(lng, lat)
+        self.site = self.conn.get_nearest_site(lng, lat)
 
         # start listening to MQTT
         self.start_blocking()
         
     # --> Sub callback function, one per intent
-    def weather_like_callback(self, hermes, intent_message):        
+    def weather_like_callback(self, hermes, intent_message):
+        # terminate the session first if not continue
+        
         print '[Received] intent: {}'.format(intent_message.intent.intent_name)
         
-        forecast = conn.get_forecast_for_site(site.id, "3hourly")
+        forecast = self.conn.get_forecast_for_site(self.site.id, "3hourly")
         current_timestep = forecast.now()
-        temperature = "%s degrees %s" % (now.temperature.value,
-                                         now.temperature.units)
+        temperature = "%s degrees %s" % (current_timestep.temperature.value,
+                                         current_timestep.temperature.units)
         
         output = "The weather in %s is likely to be %s. Temperature is %s" % (self.site.name,
                                                                               current_timestep.weather.text,
