@@ -40,7 +40,7 @@ class Weather(object):
         self.start_blocking()
         
     # --> Sub callback function, one per intent
-    def weather_callback(self, hermes, intent_message):
+    def weather_like_callback(self, hermes, intent_message):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
         
@@ -60,7 +60,7 @@ class Weather(object):
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self,hermes, intent_message):
-        self.weather_callback(hermes, intent_message)
+        self.weather_like_callback(hermes, intent_message)
 
     # --> Register callback function and start MQTT
     def start_blocking(self):
