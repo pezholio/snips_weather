@@ -44,6 +44,8 @@ class Weather(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
         
+        print '[Received] intent: {}'.format(intent_message.intent.intent_name)
+        
         forecast = conn.get_forecast_for_site(site.id, "3hourly")
         current_timestep = forecast.now()
         temperature = "%s degrees %s" % (now.temperature.value,
@@ -52,6 +54,8 @@ class Weather(object):
         output = "The weather in %s is likely to be %s. Temperature is %s" % (self.site.name,
                                                                               current_timestep.weather.text,
                                                                               temperature)
+        
+        print output
 
         # if need to speak the execution result by tts
         hermes.publish_start_session_notification(intent_message.site_id, output, "")
