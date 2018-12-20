@@ -2,3 +2,6 @@
 
 [secret]
 #empty value for secret values
+datapoint_api_key=0df1de30-94a9-4f6f-b4d4-114b3a9237be
+lng=-1.859409
+lat=52.60206

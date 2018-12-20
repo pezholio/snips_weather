@@ -1,4 +1,5 @@
-# Bindings for the hermes protocol 
+# Bindings for the hermes protocol
 hermes-python>=0.1
+datapoint==0.4.3
 
-# More dependency goes here.. 
+# More dependency goes here..
