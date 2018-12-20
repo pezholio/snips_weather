@@ -69,7 +69,7 @@ class Weather(object):
     def master_intent_callback(self,hermes, intent_message):
         self.weather_like_callback(hermes, intent_message)
     
-    def get_latlng(postcode):
+    def get_latlng(self, postcode):
         client = PostCodeClient()
         pc = client.getLookupPostCode(postcode)
         result = json.loads(pc)['result']
