@@ -28,6 +28,13 @@ class Weather(object):
             self.config = SnipsConfigParser.read_configuration_file(CONFIG_INI)
         except :
             self.config = None
+        
+        api_key = self.config.get("secret").get("datapoint_api_key")
+        lat = self.config.get("secret").get("lat")
+        lng = self.config.get("secret").get("lng")
+
+        self.conn = datapoint.connection(api_key=api_key)
+        self.site = conn.get_nearest_site(lng, lat)
 
         # start listening to MQTT
         self.start_blocking()
@@ -38,13 +45,6 @@ class Weather(object):
         hermes.publish_end_session(intent_message.session_id, "")
         
         print '[Received] intent: {}'.format(intent_message.intent.intent_name)
-        
-        api_key = self.config.get("secret").get("datapoint_api_key")
-        lat = self.config.get("secret").get("lat")
-        lng = self.config.get("secret").get("lng")
-
-        self.conn = datapoint.connection(api_key=api_key)
-        self.site = conn.get_nearest_site(lng, lat)
         
         forecast = conn.get_forecast_for_site(site.id, "3hourly")
         current_timestep = forecast.now()
@@ -58,7 +58,7 @@ class Weather(object):
         print output
 
         # if need to speak the execution result by tts
-        hermes.publish_start_session_notification(intent_message.site_id, output)
+        hermes.publish_end_session(intent_message.site_id, output)
 
     # More callback function goes here...
 
