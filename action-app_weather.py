@@ -57,7 +57,7 @@ class Weather(object):
         print output
 
         # if need to speak the execution result by tts
-        hermes.publish_end_session(intent_message.site_id, output)
+        hermes.publish_end_session(intent_message.session_id, output)
 
     # More callback function goes here...
 
