@@ -67,7 +67,7 @@ class Weather(object):
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self,hermes, intent_message):
-        if intent_message.intent.intent_name == 'pezholio:uk_weather':
+        if intent_message.intent.intent_name == 'pezholio:weather_like':
             self.weather_like_callback(hermes, intent_message)
         else:
             return
