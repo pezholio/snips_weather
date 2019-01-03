@@ -1,4 +1,4 @@
-## Snips UK Weaker
+## Snips UK Weather
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/snipsco/snips-app-template-py/blob/master/LICENSE)
 
 A Snips App using the [Met Office Datapoint API](https://www.metoffice.gov.uk/datapoint) to get the current weather for a given UK Postcode.
