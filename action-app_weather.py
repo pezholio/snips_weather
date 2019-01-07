@@ -5,6 +5,7 @@ from snipsTools import SnipsConfigParser
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
 from lib import PostCodeClient
+from forecast import Forecast
 
 import io
 import datapoint
@@ -34,11 +35,10 @@ class Weather(object):
         
         api_key = self.config.get("secret").get("datapoint_api_key")
         postcode = self.config.get("secret").get("postcode")
-        
-        lat_lng = self.get_latlng(postcode)
+
+        self.get_latlng(postcode)
 
         self.conn = datapoint.connection(api_key=api_key)
-        self.site = self.conn.get_nearest_site(lat_lng[1], lat_lng[0])
 
         # start listening to MQTT
         self.start_blocking()
@@ -49,19 +49,10 @@ class Weather(object):
         
         print '[Received] intent: {}'.format(intent_message.intent.intent_name)
         
-        forecast = self.conn.get_forecast_for_site(self.site.id, "3hourly")
-        current_timestep = forecast.now()
-        temperature = "%s degrees %s" % (current_timestep.temperature.value,
-                                         current_timestep.temperature.units)
-        
-        output = "The weather in %s is likely to be %s. Temperature is %s" % (self.site.name,
-                                                                              current_timestep.weather.text,
-                                                                              temperature)
-                                                                              
-        print output
+        forecast = Forecast(self.conn, self.latitude, self.longitude)
 
         # if need to speak the execution result by tts
-        hermes.publish_end_session(intent_message.session_id, output)
+        hermes.publish_end_session(intent_message.session_id, forecast.response())
 
     # More callback function goes here...
 
@@ -76,7 +67,8 @@ class Weather(object):
         client = PostCodeClient()
         pc = client.getLookupPostCode(postcode)
         result = json.loads(pc)['result']
-        return [result['latitude'], result['longitude']]
+        self.latitude = result['latitude']
+        self.longitude = result['longitude']
         
     # --> Register callback function and start MQTT
     def start_blocking(self):

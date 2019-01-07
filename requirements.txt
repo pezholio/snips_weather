@@ -4,3 +4,5 @@ datapoint==0.4.3
 postcode.io>=0.1.1
 
 # More dependency goes here..
+pytest>=4.0.2
+vcrpy>=2.0.1
